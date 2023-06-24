@@ -18,6 +18,6 @@ wrapper! {
 
 impl MainWindow {
     pub fn new(app: &Application) -> Self {
-        Object::new(&[("application", app)]).expect("Failed to create `Window`.")
+        Object::builder().property("application", app).build()
     }
 }

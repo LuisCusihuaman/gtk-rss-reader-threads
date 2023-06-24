@@ -11,7 +11,6 @@ use glib::{
     ObjectExt, ParamFlags, ParamSpec, ParamSpecBoolean, StaticType, ToValue, Value,
 };
 use gtk4::{
-    prelude::InitializingWidgetExt,
     subclass::{
         prelude::{BoxImpl, TemplateChild, WidgetImpl},
         widget::{CompositeTemplate, WidgetClassSubclassExt},
@@ -19,6 +18,7 @@ use gtk4::{
     traits::WidgetExt,
     Box, CompositeTemplate, ListBox,
 };
+use gtk4::subclass::widget::CompositeTemplateInitializingExt;
 use libadwaita::HeaderBar;
 
 #[derive(CompositeTemplate, Default)]
@@ -62,7 +62,7 @@ impl ObjectImpl for FeedListTemplate {
         PROPERTIES.as_ref()
     }
 
-    fn set_property(&self, _obj: &Self::Type, _id: usize, value: &Value, pspec: &ParamSpec) {
+    fn set_property(&self, _id: usize, value: &Value, pspec: &ParamSpec) {
         match pspec.name() {
             "show-end-title-buttons" => {
                 let bool_value = value.get().expect("The value needs to be of type `bool`.");
@@ -72,7 +72,7 @@ impl ObjectImpl for FeedListTemplate {
         }
     }
 
-    fn property(&self, _obj: &Self::Type, _id: usize, pspec: &ParamSpec) -> Value {
+    fn property(&self, _id: usize, pspec: &ParamSpec) -> Value {
         match pspec.name() {
             "show-end-title-buttons" => self.header_bar.shows_end_title_buttons().to_value(),
             _ => unimplemented!(),
@@ -80,13 +80,15 @@ impl ObjectImpl for FeedListTemplate {
     }
 
     fn signals() -> &'static [Signal] {
-        static SIGNALS: Lazy<Vec<Signal>> = Lazy::new(|| vec![Signal::builder("changed", &[String::static_type().into()], <()>::static_type().into()).build()]);
+        static SIGNALS: Lazy<Vec<Signal>> = Lazy::new(|| {
+            vec![Signal::builder("changed").param_types( [String::static_type()]).build()]
+        });
 
         SIGNALS.as_ref()
     }
 
-    fn constructed(&self, obj: &Self::Type) {
-        self.parent_constructed(obj);
+    fn constructed(&self) {
+        self.parent_constructed();
 
         self.list_box.connect_row_selected(|source, selected_row| {
             let selection = selected_row.unwrap();

@@ -1,7 +1,8 @@
-mod template;
-
 use glib::Object;
+
 use template::ArticleItemTemplate;
+
+mod template;
 
 glib::wrapper! {
     pub struct ArticleItem(ObjectSubclass<ArticleItemTemplate>);
@@ -9,6 +10,9 @@ glib::wrapper! {
 
 impl ArticleItem {
     pub fn new(title: &str, summary: &str) -> Self {
-        Object::new(&[("title", &title), ("summary", &summary)]).expect("Failed to create `ArticleItem`.")
+        Object::builder()
+            .property("title", title)
+            .property("summary", summary)
+            .build()
     }
 }

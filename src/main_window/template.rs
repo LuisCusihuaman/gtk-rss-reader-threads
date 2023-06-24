@@ -13,7 +13,6 @@ use glib::{
     StaticTypeExt,
 };
 use gtk4::{
-    prelude::InitializingWidgetExt,
     subclass::{
         application_window::ApplicationWindowImpl,
         prelude::{TemplateChild, WidgetImpl, WindowImpl},
@@ -24,6 +23,7 @@ use gtk4::{
 use libadwaita::{subclass::prelude::AdwApplicationWindowImpl, ApplicationWindow, Leaflet};
 use rss::Channel;
 use std::thread;
+use gtk4::subclass::widget::CompositeTemplateInitializingExt;
 
 enum Message {
     UpdateArticleList(Channel),
@@ -63,8 +63,8 @@ impl ObjectSubclass for MainWindowTemplate {
 }
 
 impl ObjectImpl for MainWindowTemplate {
-    fn constructed(&self, obj: &Self::Type) {
-        self.parent_constructed(obj);
+    fn constructed(&self) {
+        self.parent_constructed();
 
         let (sender, receiver) = MainContext::channel(PRIORITY_DEFAULT);
         let feed_model = vec![

@@ -11,7 +11,6 @@ use glib::{
     ParamFlags, ParamSpec, ParamSpecBoolean, ToValue, Value,
 };
 use gtk4::{
-    prelude::InitializingWidgetExt,
     subclass::{
         prelude::{BoxImpl, TemplateChild, WidgetImpl},
         widget::{CompositeTemplate, WidgetClassSubclassExt},
@@ -19,6 +18,7 @@ use gtk4::{
     traits::WidgetExt,
     Box, Button, CompositeTemplate, ListBox,
 };
+use gtk4::subclass::widget::CompositeTemplateInitializingExt;
 use libadwaita::HeaderBar;
 
 #[derive(CompositeTemplate, Default)]
@@ -74,7 +74,7 @@ impl ObjectImpl for ArticleListTemplate {
         PROPERTIES.as_ref()
     }
 
-    fn set_property(&self, _obj: &Self::Type, _id: usize, value: &Value, pspec: &ParamSpec) {
+    fn set_property(&self, _id: usize, value: &Value, pspec: &ParamSpec) {
         match pspec.name() {
             "show-start-title-buttons" => {
                 let bool_value = value.get().expect("The value needs to be of type `bool`.");
@@ -88,7 +88,7 @@ impl ObjectImpl for ArticleListTemplate {
         }
     }
 
-    fn property(&self, _obj: &Self::Type, _id: usize, pspec: &ParamSpec) -> Value {
+    fn property(&self, _id: usize, pspec: &ParamSpec) -> Value {
         match pspec.name() {
             "show-start-title-buttons" => self.header_bar.shows_start_title_buttons().to_value(),
             "show-back-button" => self.back_button.is_visible().to_value(),
@@ -96,8 +96,8 @@ impl ObjectImpl for ArticleListTemplate {
         }
     }
 
-    fn constructed(&self, obj: &Self::Type) {
-        self.parent_constructed(obj);
+    fn constructed(&self) {
+        self.parent_constructed();
     }
 }
 

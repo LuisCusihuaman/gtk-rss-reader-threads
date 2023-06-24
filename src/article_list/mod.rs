@@ -21,7 +21,7 @@ impl Default for ArticleList {
 
 impl ArticleList {
     pub fn new() -> Self {
-        glib::Object::new(&[]).expect("Failed to create an instance of ArticleList")
+        glib::Object::builder().build()
     }
 
     pub fn set_model(&self, model: Vec<ArticleItem>) {
@@ -32,7 +32,7 @@ impl ArticleList {
             list_store_model.append(&element);
         }
 
-        let selection_model = SingleSelection::new(Some(&list_store_model));
+        let selection_model = SingleSelection::new(Some(list_store_model));
 
         template.list_box.bind_model(Some(&selection_model), |x| {
             let title: String = x.property("title");

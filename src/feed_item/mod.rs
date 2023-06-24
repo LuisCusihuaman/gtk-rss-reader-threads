@@ -9,6 +9,9 @@ wrapper! {
 
 impl FeedItem {
     pub fn new(name: &str, url: &str) -> Self {
-        Object::new(&[("name", &name), ("url", &url)]).expect("Failed to create `FeedItem`.")
+        Object::builder()
+            .property("name", name)
+            .property("url", url)
+            .build()
     }
 }

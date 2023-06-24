@@ -30,7 +30,7 @@ impl ObjectImpl for FeedItemTemplate {
         PROPERTIES.as_ref()
     }
 
-    fn set_property(&self, _obj: &Self::Type, _id: usize, value: &Value, pspec: &ParamSpec) {
+    fn set_property(&self, _id: usize, value: &Value, pspec: &ParamSpec) {
         match pspec.name() {
             "name" => {
                 let name_string = value.get().expect("The value needs to be of type `String`.");
@@ -44,7 +44,7 @@ impl ObjectImpl for FeedItemTemplate {
         }
     }
 
-    fn property(&self, _obj: &Self::Type, _id: usize, pspec: &ParamSpec) -> Value {
+    fn property(&self, _id: usize, pspec: &ParamSpec) -> Value {
         match pspec.name() {
             "name" => {
                 let result = self.name.take();
